@@ -1,5 +1,3 @@
-Here's your updated `README.md` file for the IT Asset Management System project, reflecting your current role and new portfolio link:
-
 ---
 
 ```markdown
