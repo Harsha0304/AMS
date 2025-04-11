@@ -85,12 +85,3 @@ This is a Django-based IT Asset Management System designed to help IT department
 **Harsha**  
 🔧 DevOps Engineer @ ABI Health Technologies  
 🌐 [Portfolio](https://harsha0304.github.io/portfolio/)
-
----
-
-> Built with ❤️ to simplify IT infrastructure tracking.
-```
-
----
-
-Let me know if you want to include screenshots, license info, or GitHub repo badges.
