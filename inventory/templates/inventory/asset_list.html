@@ -1,0 +1,24 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<h2>Assets</h2>
+<a href="{% url 'asset_create' %}">Add New Asset</a>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Serial</th>
+        <th>Assigned To</th>
+        <th>SIM/Dongle</th>
+        <th>Vendor</th>
+    </tr>
+    {% for asset in assets %}
+    <tr>
+        <td>{{ asset.name }}</td>
+        <td>{{ asset.serial_number }}</td>
+        <td>{{ asset.assigned_to }}</td>
+        <td>{{ asset.SIM_or_Dongle }}</td>
+        <td>{{ asset.vendor }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

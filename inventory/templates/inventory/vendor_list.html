@@ -1,0 +1,22 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<h2>Vendors</h2>
+<a href="{% url 'vendor_create' %}">Add New Vendor</a>
+<table border="1">
+    <tr>
+        <th>Company</th>
+        <th>Contact</th>
+        <th>Email</th>
+        <th>Phone</th>
+    </tr>
+    {% for vendor in vendors %}
+    <tr>
+        <td>{{ vendor.company_name }}</td>
+        <td>{{ vendor.contact_person }}</td>
+        <td>{{ vendor.email }}</td>
+        <td>{{ vendor.phone_number }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IT Asset Management</title>
+</head>
+<body>
+    <h1>IT Asset Management System</h1>
+    <nav>
+        <a href="{% url 'asset_list' %}">Assets</a> |
+        <a href="{% url 'vendor_list' %}">Vendors</a>
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>
