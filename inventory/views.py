@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404
+# inventory/views.py
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
+from django.shortcuts import render, redirect
 from .models import Asset, Vendor
 from .forms import AssetForm, VendorForm
 from django.contrib.auth.forms import AuthenticationForm
@@ -32,18 +31,38 @@ def home(request):
 @login_required
 def asset_list(request):
     assets = Asset.objects.all()
-    return render(request, 'inventory/asset_list.html', {'assets': assets})
+    stats = {
+        'total': assets.count(),
+        'issued': assets.filter(status='issued').count(),
+        'pending': assets.filter(status='pending').count(),
+        'available': assets.filter(status='available').count(),
+    }
+    return render(request, 'inventory/asset_list.html', {'assets': assets, 'stats': stats})
 
 @login_required
 def asset_create(request):
     if request.method == 'POST':
         form = AssetForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('asset_list')
+            form.save()  # Save the new asset
+            return redirect('asset_list')  # Redirect to asset list after save
     else:
         form = AssetForm()
-    return render(request, 'inventory/asset_form.html', {'form': form})
+
+    assets = Asset.objects.all()
+    stats = {
+        'total': assets.count(),
+        'issued': assets.filter(status='issued').count(),
+        'pending': assets.filter(status='pending').count(),
+        'available': assets.filter(status='available').count(),
+    }
+    laptops = assets.filter(asset_type='laptop')
+
+    return render(request, 'inventory/asset_form.html', {
+        'form': form,
+        'stats': stats,
+        'laptops': laptops,
+    })
 
 @login_required
 def vendor_list(request):

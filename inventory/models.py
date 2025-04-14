@@ -1,7 +1,9 @@
 from django.db import models
 
+
 # Vendor Model to store vendor details
 class Vendor(models.Model):
+    name = models.CharField(max_length=255)  # Keep only this one
     company_name = models.CharField(max_length=255)
     contact_person = models.CharField(max_length=255)
     email = models.EmailField(blank=True, null=True)
@@ -12,15 +14,42 @@ class Vendor(models.Model):
         return self.company_name
 
 
-# Asset Model - Updated with Vendor and SIM/Dongle Fields
+
+# Asset Model - Updated with Vendor, SIM/Dongle Fields, asset_type, and status
 class Asset(models.Model):
-    name = models.CharField(max_length=100)
-    serial_number = models.CharField(max_length=100)
-    assigned_to = models.CharField(max_length=100)
-    purchase_date = models.DateField()
+    ASSET_TYPE_CHOICES = [
+        ('laptop', 'Laptop'),
+        ('desktop', 'Desktop'),
+        ('server', 'Server'),
+        ('keyboard', 'Keyboard'),
+        ('mouse', 'Mouse'),
+        ('network_switch', 'Network Switch'),
+        ('firewall', 'Firewall'),
+        ('router', 'Router'),
+        ('sim_card', 'SIM Card'),
+        ('phone', 'Phone'),
+        ('camera', 'Camera'),
+    ]
+
+    STATUS_CHOICES = [
+        ('issued', 'Issued'),
+        ('pending', 'Pending'),
+        ('available', 'Available'),
+    ]
 
     # Adding Vendor ForeignKey
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True)
+
+    # Asset Type and Status
+    # asset_type = models.CharField(max_length=50, choices=ASSET_TYPE_CHOICES)
+    asset_type = models.CharField(max_length=50, choices=ASSET_TYPE_CHOICES, default='laptop')
+    # status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    status = models.CharField(
+    max_length=50,
+    choices=STATUS_CHOICES,
+    default='available'  # or 'pending', 'issued' — choose what fits your use case
+)
+
 
     # SIM/Dongle Fields
     SIM_or_Dongle = models.CharField(max_length=50, choices=[('SIM', 'SIM'), ('Dongle', 'Dongle')])
@@ -32,8 +61,22 @@ class Asset(models.Model):
     sim_phone_number = models.CharField(max_length=20, blank=True, null=True)
     sim_ccid_number = models.CharField(max_length=30, blank=True, null=True)
 
+    # General Fields for all assets
+    name = models.CharField(max_length=100)
+    serial_number = models.CharField(max_length=100)
+    assigned_to = models.CharField(max_length=100)
+    purchase_date = models.DateField()
+
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.asset_type})"
+
+    @property
+    def is_issued(self):
+        return self.status == 'issued'
+
+    @property
+    def is_pending(self):
+        return self.status == 'pending'
 
 
 # Employee Model to store Employee information
@@ -105,12 +148,18 @@ class Keyboard(models.Model):
     serial_number = models.CharField(max_length=100)
     assigned_to = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.SET_NULL)
 
+    def __str__(self):
+        return self.serial_number
+
 
 # Mouse Model to store Mouse details
 class Mouse(models.Model):
     brand = models.CharField(max_length=50)
     serial_number = models.CharField(max_length=100)
     assigned_to = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.serial_number
 
 
 # NetworkSwitch Model to store Network Switch details
@@ -119,12 +168,18 @@ class NetworkSwitch(models.Model):
     ip_address = models.GenericIPAddressField()
     location = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 # Firewall Model to store Firewall details
 class Firewall(models.Model):
     name = models.CharField(max_length=100)
     ip_address = models.GenericIPAddressField()
     location = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 # Router Model to store Router details
@@ -133,6 +188,9 @@ class Router(models.Model):
     ip_address = models.GenericIPAddressField()
     location = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 # SIMCard Model - Modified with SIM Details
 class SIMCard(models.Model):
@@ -140,12 +198,18 @@ class SIMCard(models.Model):
     provider = models.CharField(max_length=100)
     assigned_to = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.SET_NULL)
 
+    def __str__(self):
+        return self.sim_number
+
 
 # Phone Model to store Phone details
 class Phone(models.Model):
     model = models.CharField(max_length=100)
     imei = models.CharField(max_length=20)
     assigned_to = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.model
 
 
 # Camera Model to store Camera details
@@ -156,3 +220,5 @@ class Camera(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.model
