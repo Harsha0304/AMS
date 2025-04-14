@@ -1,7 +1,6 @@
 # inventory/forms.py
-
 from django import forms
-from .models import Asset, Vendor
+from .models import Asset, Vendor, Employee  # Assuming Employee model exists
 
 class AssetForm(forms.ModelForm):
     class Meta:
@@ -15,4 +14,10 @@ class AssetForm(forms.ModelForm):
 class VendorForm(forms.ModelForm):
     class Meta:
         model = Vendor
-        fields = ['name', 'address', 'phone_number'] 
+        fields = ['name', 'contact', 'address']  # Adjust fields as per your model
+        
+
+class EmployeeForm(forms.ModelForm):
+    class Meta:
+        model = Employee  # Assuming you have an Employee model
+        fields = ['name', 'email', 'phone', 'department']  # Adjust fields as per your model

@@ -9,10 +9,12 @@ class Vendor(models.Model):
     email = models.EmailField(blank=True, null=True)
     phone_number = models.CharField(max_length=20)
     address = models.TextField()
+    # name = models.CharField(max_length=255)
+    # address = models.TextField()
+    contact = models.CharField(max_length=255)
 
     def __str__(self):
         return self.company_name
-
 
 
 # Asset Model - Updated with Vendor, SIM/Dongle Fields, asset_type, and status
@@ -41,15 +43,12 @@ class Asset(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True)
 
     # Asset Type and Status
-    # asset_type = models.CharField(max_length=50, choices=ASSET_TYPE_CHOICES)
     asset_type = models.CharField(max_length=50, choices=ASSET_TYPE_CHOICES, default='laptop')
-    # status = models.CharField(max_length=50, choices=STATUS_CHOICES)
     status = models.CharField(
-    max_length=50,
-    choices=STATUS_CHOICES,
-    default='available'  # or 'pending', 'issued' — choose what fits your use case
-)
-
+        max_length=50,
+        choices=STATUS_CHOICES,
+        default='available'  # or 'pending', 'issued' — choose what fits your use case
+    )
 
     # SIM/Dongle Fields
     SIM_or_Dongle = models.CharField(max_length=50, choices=[('SIM', 'SIM'), ('Dongle', 'Dongle')])
@@ -64,7 +63,7 @@ class Asset(models.Model):
     # General Fields for all assets
     name = models.CharField(max_length=100)
     serial_number = models.CharField(max_length=100)
-    assigned_to = models.CharField(max_length=100)
+    assigned_to = models.ForeignKey('Employee', on_delete=models.SET_NULL, null=True, blank=True)
     purchase_date = models.DateField()
 
     def __str__(self):
@@ -84,9 +83,15 @@ class Employee(models.Model):
     name = models.CharField(max_length=100)
     department = models.CharField(max_length=100, blank=True)
     email = models.EmailField(blank=True)
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15) 
 
     def __str__(self):
         return self.name
+
+    # Method to get all assets assigned to this employee
+    def get_assets(self):
+        return Asset.objects.filter(assigned_to=self)
 
 
 # Laptop Model to store Laptop asset details
@@ -207,7 +212,11 @@ class Phone(models.Model):
     model = models.CharField(max_length=100)
     imei = models.CharField(max_length=20)
     assigned_to = models.ForeignKey(Employee, null=True, blank=True, on_delete=models.SET_NULL)
-
+    assigned_to = models.ForeignKey(
+        'Employee', 
+        on_delete=models.CASCADE,
+        related_name='phones'  # Change this to something unique like 'phones'
+    )
     def __str__(self):
         return self.model
 
