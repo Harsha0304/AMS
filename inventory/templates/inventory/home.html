@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>AMS Home</title>
-</head>
-<body>
-    <h1>Welcome to the IT Asset Management System</h1>
-    <ul>
-        <li><a href="{% url 'asset_list' %}">View Assets</a></li>
-        <li><a href="{% url 'vendor_list' %}">View Vendors</a></li>
-    </ul>
-</body>
-</html>
+{% extends 'inventory/base.html' %}
+{% block content %}
+<h2>Welcome {{ request.user.username }}!</h2>
+<p>Use the menu to manage assets and vendors.</p>
+{% endblock %}
