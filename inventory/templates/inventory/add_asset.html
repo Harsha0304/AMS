@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Add New Asset</h2>
+
+  <form method="POST" class="row g-3">
+    {% csrf_token %}
+
+    <div class="col-md-6">
+      <label for="id_name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="id_name" name="name" required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_serial_number" class="form-label">Serial number</label>
+      <input type="text" class="form-control" id="id_serial_number" name="serial_number" required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_assigned_to" class="form-label">Assigned to</label>
+      <select id="id_assigned_to" name="assigned_to" class="form-select">
+        <option selected>---------</option>
+        {% for employee in employees %}
+          <option value="{{ employee.id }}">{{ employee.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_purchase_date" class="form-label">Purchase date</label>
+      <input type="date" class="form-control" id="id_purchase_date" name="purchase_date" required>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_vendor" class="form-label">Vendor</label>
+      <select id="id_vendor" name="vendor" class="form-select">
+        <option selected>---------</option>
+        {% for vendor in vendors %}
+          <option value="{{ vendor.id }}">{{ vendor.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_asset_type" class="form-label">Asset type</label>
+      <input type="text" class="form-control" id="id_asset_type" name="asset_type" value="Laptop" readonly>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_status" class="form-label">Status</label>
+      <select id="id_status" name="status" class="form-select">
+        <option value="Available" selected>Available</option>
+        <option value="Issued">Issued</option>
+        <option value="Pending">Pending</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_sim_or_dongle" class="form-label">SIM or Dongle</label>
+      <select id="id_sim_or_dongle" name="sim_or_dongle" class="form-select">
+        <option selected>---------</option>
+        <option value="SIM">SIM</option>
+        <option value="Dongle">Dongle</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_dongle_type" class="form-label">Dongle type</label>
+      <input type="text" class="form-control" id="id_dongle_type" name="dongle_type">
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_dongle_id" class="form-label">Dongle id</label>
+      <input type="text" class="form-control" id="id_dongle_id" name="dongle_id">
+    </div>
+
+    <div class="col-md-4">
+      <label for="id_sim_name" class="form-label">Sim name</label>
+      <input type="text" class="form-control" id="id_sim_name" name="sim_name">
+    </div>
+
+    <div class="col-md-4">
+      <label for="id_sim_phone" class="form-label">Sim phone number</label>
+      <input type="text" class="form-control" id="id_sim_phone" name="sim_phone_number">
+    </div>
+
+    <div class="col-md-4">
+      <label for="id_sim_ccid" class="form-label">Sim ccid number</label>
+      <input type="text" class="form-control" id="id_sim_ccid" name="sim_ccid_number">
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Save Asset</button>
+    </div>
+  </form>
+
+  <hr class="my-5">
+
+  <h3>Asset Summary</h3>
+  <ul class="list-group mb-4">
+    <li class="list-group-item">Total Assets: {{ summary.total }}</li>
+    <li class="list-group-item">Issued Assets: {{ summary.issued }}</li>
+    <li class="list-group-item">Pending Assets: {{ summary.pending }}</li>
+    <li class="list-group-item">Available Assets: {{ summary.available }}</li>
+  </ul>
+
+  <h4>Laptop Assets</h4>
+  {% if laptops %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Serial Number</th>
+          <th>Assigned To</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for laptop in laptops %}
+          <tr>
+            <td>{{ laptop.name }}</td>
+            <td>{{ laptop.serial_number }}</td>
+            <td>{{ laptop.assigned_to }}</td>
+            <td>{{ laptop.status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No laptops added yet.</p>
+  {% endif %}
+
+</div>
+{% endblock %}

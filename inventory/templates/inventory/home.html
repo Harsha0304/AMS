@@ -1,5 +1,43 @@
-{% extends 'inventory/base.html' %}
+<!-- templates/inventory/home.html -->
+{% extends 'base.html' %}
 {% block content %}
-<h2>Welcome {{ request.user.username }}!</h2>
-<p>Use the menu to manage assets and vendors.</p>
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-lg">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">Welcome, {{ request.user.username }}!</h2>
+    </div>
+    <div class="card-body">
+      <p class="lead">Use the menu to manage assets, vendors, and employees efficiently.</p>
+      <div class="row text-center">
+        <div class="col-md-4">
+          <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Total Assets</h5>
+              <p class="card-text display-6">{{ stats.total }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Issued</h5>
+              <p class="card-text display-6">{{ stats.issued }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Available</h5>
+              <p class="card-text display-6">{{ stats.available }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer text-end">
+      <a href="{% url 'asset_list' %}" class="btn btn-outline-primary">Go to Asset List</a>
+    </div>
+  </div>
+</div>
 {% endblock %}

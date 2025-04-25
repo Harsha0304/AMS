@@ -1,13 +1,11 @@
 # inventory/views.py
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from .models import Asset, Vendor
-from .forms import AssetForm, VendorForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Asset, Vendor, Employee
+from .forms import AssetForm, VendorForm, EmployeeForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Asset, Vendor, Employee
-from .forms import AssetForm, VendorForm, EmployeeForm
 
 # User Login view
 def user_login(request):
@@ -53,8 +51,8 @@ def asset_create(request):
     if request.method == 'POST':
         form = AssetForm(request.POST)
         if form.is_valid():
-            form.save()  # Save the new asset
-            return redirect('asset_list')  # Redirect to asset list after save
+            form.save()
+            return redirect('asset_list')
     else:
         form = AssetForm()
 
@@ -67,7 +65,7 @@ def asset_create(request):
     }
     laptops = assets.filter(asset_type='laptop')
 
-    return render(request, 'inventory/asset_form.html', {
+    return render(request, 'inventory/add_asset.html', {
         'form': form,
         'stats': stats,
         'laptops': laptops,
@@ -112,12 +110,12 @@ def employee_create(request):
 # Employee Detail view - shows details of a single employee including assigned assets
 @login_required
 def employee_detail(request, employee_id):
-    employee = Employee.objects.get(id=employee_id)
+    employee = get_object_or_404(Employee, id=employee_id)
     assets = Asset.objects.filter(assigned_to=employee.name)
     return render(request, 'inventory/employee_detail.html', {'employee': employee, 'assets': assets})
 
 # Asset Detail view - shows detailed information about an asset
 @login_required
 def asset_detail(request, asset_id):
-    asset = Asset.objects.get(id=asset_id)
+    asset = get_object_or_404(Asset, id=asset_id)
     return render(request, 'inventory/asset_detail.html', {'asset': asset})
